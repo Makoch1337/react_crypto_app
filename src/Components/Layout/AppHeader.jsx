@@ -2,6 +2,7 @@ import { Layout, Select, Space, Button, Modal, Drawer, } from 'antd';
 import { useCrypto } from '../../context/crypto-context';
 import { useEffect, useState } from 'react';
 import CoinInfoModal from '../CoinInfoModel';
+import AddAssetForm from '../AddAssetForm';
 
 const headerStyle = {
     width: '100%',
@@ -18,7 +19,7 @@ export default function AppHeader() {
     const [select, setSelect] = useState(false)
     const [modal, setModal] = useState(false)
     const [coin, setCoin] = useState(null)
-    const [drawer, setDrawer] = useState(false)
+    const [drawer, setDrawer] = useState(true)
 
     const { crypto } = useCrypto()
 
@@ -40,6 +41,7 @@ export default function AppHeader() {
     return (
         <Layout.Header style={headerStyle}>
             <Select
+                
                 style={{
                     width: 250,
                 }}
@@ -47,7 +49,6 @@ export default function AppHeader() {
                 onSelect={handleSelect}
                 onClick={() => setSelect((prev) => !prev)}
                 value="press / to open"
-                defaultValue={['china']}
                 options={crypto.map((coin) => ({
                     label: coin.name,
                     value: coin.id,
@@ -76,10 +77,13 @@ export default function AppHeader() {
                 <CoinInfoModal coin={coin} />
             </Modal>
 
-            <Drawer title="Add Asset" onClose={() => {setDrawer(false)}} open={drawer}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+            <Drawer
+                width={600} title="Add Asset"
+                onClose={() => { setDrawer(false) }}
+                open={drawer}
+                destroyOnClose
+            >
+                <AddAssetForm onClose={() => setDrawer(false)} />
             </Drawer>
         </Layout.Header>
     )
