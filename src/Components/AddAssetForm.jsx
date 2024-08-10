@@ -24,9 +24,9 @@ const validateMessages = {
     }
 };
 
-export default function AddAssetForm({ onclose }) {
+export default function AddAssetForm({ onClose }) {
     const [form] = Form.useForm()
-    const { crypto } = useCrypto()
+    const { crypto, addAsset } = useCrypto()
     const [coin, setCoin] = useState(null)
     const [submitted, setSubmitted] = useState(false)
     const assetRef = useRef()
@@ -36,11 +36,11 @@ export default function AddAssetForm({ onclose }) {
             <Result
                 status="success"
                 title="New Asset Added!"
-                subTitle={`Added ${42} of ${coin.name} by price ${24}`}
+                subTitle={`Added ${assetRef.current.amount} of ${coin.name} by price ${assetRef.current.price}`}
                 extra={[
-                    <Button type="primary" key="console" onClick={onclose}>
-                        Go Console
-                    </Button>,
+                    <Button type="primary" key="console" onClick={onClose}>
+                        Close
+                    </Button>
                 ]}
             />
         )
@@ -89,7 +89,9 @@ export default function AddAssetForm({ onclose }) {
             price: values.price,
             date: values.date?.id ?? new Date()
         }
-            setSubmitted(true)
+        assetRef.current = newAsset
+        setSubmitted(true)
+        addAsset(newAsset)
     }
 
 
@@ -113,7 +115,7 @@ export default function AddAssetForm({ onclose }) {
             onFinishFailed={(errorInfo) => console.log('Failed:', errorInfo)}
             validateMessages={validateMessages}
         >
-            <CoinInfo coin={coin}/>
+            <CoinInfo coin={coin} />
             <Divider />
 
             <Form.Item
